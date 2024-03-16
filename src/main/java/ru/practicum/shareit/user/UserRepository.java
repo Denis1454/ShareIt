@@ -11,7 +11,7 @@ public interface UserRepository {
 
     List<User> getAllUser();
 
-   void deleteUser(Long userId);
+    void deleteUser(Long userId);
 
-   boolean existById(Long userId);
+    boolean existById(Long userId);
 }

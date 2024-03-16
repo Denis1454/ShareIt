@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto create(UserDto userDto) {
-        checkDuplicatesEmail(userDto,userDto.getId());
+        checkDuplicatesEmail(userDto, userDto.getId());
         User save = userRepository.save(toUser(userDto));
         return toUserDto(save);
     }
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     public UserUpdateDto updateUser(UserDto userDto, Long userId) {
         User user = Optional.of(userRepository.findById(userId))
                 .orElseThrow(() -> new NotFoundException("Пользователя с таким Id не существует"));
-        checkDuplicatesEmail(userDto,userId);
+        checkDuplicatesEmail(userDto, userId);
         userMapperDto.updateUserDto(userDto, user);
         User updated = userRepository.updateUser(user);
 
@@ -64,15 +64,16 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private void checkDuplicatesEmail(UserDto userDto,Long userId) {
+    private void checkDuplicatesEmail(UserDto userDto, Long userId) {
         List<User> emailExist = userRepository.getAllUser().stream()
                 .filter(user -> user.getEmail().equals(userDto.getEmail()))
                 .collect(Collectors.toList());
-        if(!isEmpty(emailExist)) {
+        if (!isEmpty(emailExist)) {
             User user = emailExist.get(0);
-            if(userDto.getEmail().equals(user.getEmail()) && user.getId().equals(userId)) {
+            if (userDto.getEmail().equals(user.getEmail()) && user.getId().equals(userId)) {
                 return;
-            } throw new UserDuplicateEmailException("Такой email уже зарегистрирован");
+            }
+            throw new UserDuplicateEmailException("Такой email уже зарегистрирован");
         }
     }
 }
